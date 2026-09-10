@@ -1,0 +1,2 @@
+泵站模拟器 127.0.0.1:62439，站号 1
+fault 1 | fault 2 | level 9.5 | offline | recover | quit
