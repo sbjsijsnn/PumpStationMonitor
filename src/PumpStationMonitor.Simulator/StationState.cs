@@ -1,5 +1,6 @@
 using PumpStationMonitor.Core.Protocol;
 namespace PumpStationMonitor.Simulator;
+
 public sealed class StationState
 {
     private readonly object gate = new();

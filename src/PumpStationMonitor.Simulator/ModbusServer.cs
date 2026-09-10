@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using Microsoft.Extensions.Logging;
 using PumpStationMonitor.Core.Protocol;
 namespace PumpStationMonitor.Simulator;
+
 public sealed class ModbusServer(StationState station, ILogger<ModbusServer> logger) : IAsyncDisposable
 {
     private TcpListener? listener;

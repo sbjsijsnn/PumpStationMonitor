@@ -6,3 +6,6 @@
 *.db-wal
 logs/
 TestResults/
+
+artifacts/
+**/publish/

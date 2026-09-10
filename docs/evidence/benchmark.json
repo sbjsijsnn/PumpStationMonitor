@@ -1,0 +1,22 @@
+[
+  {
+    "totalRows": 100000,
+    "returnedRows": 10000,
+    "queryLimit": 10000,
+    "warmRuns": 5,
+    "minMs": 21.3357,
+    "meanMs": 24.064739999999993,
+    "maxMs": 27.734,
+    "insertSeconds": 2.6279826
+  },
+  {
+    "totalRows": 500000,
+    "returnedRows": 10000,
+    "queryLimit": 10000,
+    "warmRuns": 5,
+    "minMs": 14.5251,
+    "meanMs": 18.17676,
+    "maxMs": 22.0266,
+    "insertSeconds": 9.6722736
+  }
+]

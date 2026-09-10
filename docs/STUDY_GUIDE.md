@@ -43,10 +43,31 @@
 13. 报警死区有什么作用？触发与恢复用不同阈值，减少边界抖动。
 14. 报警延时怎样实现？记录首次越限时间，持续越限足够久才产生；中途正常或坏质量重置。
 15. 确认与恢复有什么区别？确认是人已知悉，恢复是测量条件解除；共享发生事件 ID 方便追踪。
-16. 跨线程如何更新 UI？后续 App 通过 Dispatcher 切回 UI 线程，不在后台修改 ObservableCollection。
-17. DI 有什么好处？后续宿主集中管理依赖与生命周期，便于替换客户端和测试实现。
-18. Channel 为什么比 lock+List 适合历史写入？后续用异步等待和有界背压连接生产消费，不需手工轮询队列。
-19. SQLite 批量写入为何用事务？后续用事务摊薄提交成本，并用参数避免拼接 SQL。
+16. 跨线程如何更新 UI？App 通过 Dispatcher 切回 UI 线程，不在后台修改 ObservableCollection。
+17. DI 有什么好处？宿主集中管理依赖与生命周期，便于替换客户端和测试实现。
+18. Channel 为什么比 lock+List 适合历史写入？使用异步等待和有界背压连接生产消费，不需手工轮询队列。
+19. SQLite 批量写入为何用事务？使用事务摊薄提交成本，并用参数避免拼接 SQL。
 20. 性能指标如何可信？记录环境、采样方法、数据量和原始证据；未跑的 2 小时稳定性或 50 万条查询不能编造。
 
-第 16～19 题为后续里程碑预习，不代表相关模块已实现。
+第 16～19 题可结合 Data 与 App 项目验证。
+
+
+## 数据与界面阅读路线
+
+8. `Data/schema.sql` → `StationRepository.cs` → `Seed.cs`：七表、参数 SQL、默认点表。
+9. `Data/Services/HistoryWriter.cs` → `PollingService.cs` → `StationRuntime.cs`：批次、取消、分组读取、快照与报警事件。
+10. `Data/Security/PasswordHasher.cs` → `SessionService.cs` → `StationFacade.cs`：登录、角色与业务规则。
+11. `App/App.xaml.cs` → `ViewModels/LoginViewModel.cs` → `MainViewModel.cs` → `Views/MainWindow.xaml`：生命周期、绑定、命令、界面。
+12. `tests/PumpStationMonitor.Tests/DataTests.cs`：从真实模拟器走到 SQLite，检查权限、重启、清理和退出排空。
+
+路径中 Data/App 指 src/PumpStationMonitor.Data 和 src/PumpStationMonitor.App。
+
+数据库自检：为什么 history 不因删除点位而级联删除？WAL 对查询有什么帮助？索引字段顺序为什么是 tag_id,timestamp？保留策略为什么分块删除？
+
+采集自检：23 个点位为什么只读 6 次？稀疏地址为什么不能盲目合并？队列满时为什么等待？关闭时谁先停止？
+
+界面自检：DispatcherTimer 回调在哪个线程？为什么过期数据显示破折号？曲线为何限制点数？保存后为什么需要刷新配置？
+
+权限自检：按钮禁用是否足够？账号被禁用后服务如何发现？最后一个管理员为何不能降级？日志为什么不输出密码？
+
+两个月学习安排：第 1–2 周协议与测试；第 3 周模拟器与点表；第 4 周数据库和 Channel；第 5 周报警；第 6 周 MVVM 与图表；第 7 周权限、配置和异常；第 8 周独立演示、故障排查与面试复述。每周自己修改一个小功能并补充测试。

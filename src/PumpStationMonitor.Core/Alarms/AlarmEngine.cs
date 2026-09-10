@@ -1,5 +1,6 @@
 using PumpStationMonitor.Core.Models;
 namespace PumpStationMonitor.Core.Alarms;
+
 public enum AlarmKind { Bit, HH, H, L, LL }
 public enum AlarmSeverity { Information, Warning, Emergency }
 public enum AlarmTransition { Raised, Recovered, Acknowledged }
@@ -63,6 +64,10 @@ public sealed class AlarmEngine
             else state.Pending = null;
         }
         return result;
+    }
+    public void RestoreActive(string ruleId, Guid occurrence, double value, DateTimeOffset raisedAt, bool acknowledged)
+    {
+        var state = states[ruleId]; state.Active = true; state.Occurrence = occurrence; state.Value = value; state.Last = raisedAt; state.Acknowledged = acknowledged;
     }
     public AlarmEvent? Acknowledge(string ruleId, string user, DateTimeOffset timestamp)
     {

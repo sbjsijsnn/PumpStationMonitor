@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\PumpStationMonitor.Core\PumpStationMonitor.Core.csproj" />
     <ProjectReference Include="..\..\src\PumpStationMonitor.Simulator\PumpStationMonitor.Simulator.csproj" />
+    <ProjectReference Include="..\..\src\PumpStationMonitor.Data\PumpStationMonitor.Data.csproj" />
   </ItemGroup>
 
 </Project>
