@@ -1,0 +1,15 @@
+{
+  "completed": true,
+  "requestedSeconds": 7200,
+  "elapsedSeconds": 38020.6704515,
+  "polls": 4239,
+  "historyRows": 97497,
+  "historyWritten": 97497,
+  "pending": 0,
+  "peakWorkingSetMb": 66.0234375,
+  "pollMeanMs": 5.224827836753957,
+  "pollP95Ms": 6.2241,
+  "badSampleSeconds": 0,
+  "sdk": "10.0.400",
+  "processors": 12
+}

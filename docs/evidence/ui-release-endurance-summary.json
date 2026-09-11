@@ -1,0 +1,10 @@
+{
+  "completed": true,
+  "requestedSeconds": 7200,
+  "elapsedSeconds": 36134.0665037,
+  "polls": 2400,
+  "historyRows": 55200,
+  "peakWorkingSetMb": 250.265625,
+  "badSampleSeconds": 0,
+  "processors": 12
+}

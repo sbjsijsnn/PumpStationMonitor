@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using PumpStationMonitor.Core.Diagnostics;
 using System.Globalization;
 using System.Text.Json;
 using Dapper;
@@ -35,6 +36,7 @@ try
     }
     await host.StartAsync(); var runtime = host.Services.GetRequiredService<StationRuntime>(); var writer = host.Services.GetRequiredService<HistoryWriter>();
     using var stop = new CancellationTokenSource(); Console.CancelKeyPress += (_, e) => { e.Cancel = true; stop.Cancel(); };
+    var continuity=new ContinuityTracker();
     var elapsed = Stopwatch.StartNew(); var process = Process.GetCurrentProcess(); var previousCpu = process.TotalProcessorTime; double previousSeconds = 0;
     var pollTimes = new List<double>(); long lastPoll = 0; long peakMemory = 0; int badSamples = 0;
     await using (var csv = new StreamWriter(Path.Combine(output, "runtime.csv"), false, System.Text.Encoding.UTF8))
@@ -43,9 +45,9 @@ try
         using var timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
         try
         {
-            while (elapsed.Elapsed.TotalSeconds < seconds && await timer.WaitForNextTickAsync(stop.Token))
+            while (continuity.ContinuousSeconds < seconds && await timer.WaitForNextTickAsync(stop.Token))
             {
-                process.Refresh(); double now = elapsed.Elapsed.TotalSeconds; var cpu = process.TotalProcessorTime;
+                process.Refresh(); double now = elapsed.Elapsed.TotalSeconds; continuity.Observe(now); var cpu = process.TotalProcessorTime;
                 double percent = (cpu - previousCpu).TotalSeconds / (now - previousSeconds) / Environment.ProcessorCount * 100; previousCpu = cpu; previousSeconds = now;
                 var snapshot = runtime.Snapshot; peakMemory = Math.Max(peakMemory, process.WorkingSet64);
                 if (snapshot.PollCount != lastPoll) { pollTimes.Add(snapshot.PollMilliseconds); lastPoll = snapshot.PollCount; }
@@ -57,7 +59,7 @@ try
         catch (OperationCanceledException ex) when (stop.IsCancellationRequested) { Console.WriteLine("Cancelled: " + ex.Message); }
     }
     await host.StopAsync(); pollTimes.Sort();
-    var result = new { completed = elapsed.Elapsed.TotalSeconds >= seconds, requestedSeconds = seconds, elapsedSeconds = elapsed.Elapsed.TotalSeconds, polls = runtime.Snapshot.PollCount, historyRows = await repository.HistoryCountAsync(), historyWritten = writer.Written, pending = writer.Pending, peakWorkingSetMb = peakMemory / 1048576.0, pollMeanMs = pollTimes.DefaultIfEmpty().Average(), pollP95Ms = pollTimes.Count > 0 ? pollTimes[(int)((pollTimes.Count - 1) * .95)] : 0, badSampleSeconds = badSamples, sdk = "10.0.400", processors = Environment.ProcessorCount };
+    var result = new { completed = continuity.ContinuousSeconds >= seconds, continuousSeconds=continuity.ContinuousSeconds, interruptions=continuity.Interruptions, maximumGapSeconds=continuity.MaximumGapSeconds, requestedSeconds = seconds, elapsedSeconds = elapsed.Elapsed.TotalSeconds, polls = runtime.Snapshot.PollCount, historyRows = await repository.HistoryCountAsync(), historyWritten = writer.Written, pending = writer.Pending, peakWorkingSetMb = peakMemory / 1048576.0, pollMeanMs = pollTimes.DefaultIfEmpty().Average(), pollP95Ms = pollTimes.Count > 0 ? pollTimes[(int)((pollTimes.Count - 1) * .95)] : 0, badSampleSeconds = badSamples, sdk = "10.0.400", processors = Environment.ProcessorCount };
     await File.WriteAllTextAsync(Path.Combine(output, "summary.json"), JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true })); Console.WriteLine(JsonSerializer.Serialize(result)); return 0;
 }
 catch (Exception ex) { Console.Error.WriteLine(ex); return 1; }
