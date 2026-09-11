@@ -22,7 +22,7 @@
 
 ## 两小时稳定性
 
-初次宿主与 WPF 长测均因系统休眠中断，不能认定连续两小时通过；复测尚未完成。
+最终 WPF 复测已达到连续两小时采样，见下文。
 
 ## 持续运行最终记录
 
@@ -67,4 +67,13 @@
 
 ### 最终 WPF 连续 2 小时复测
 
-仍在运行，未完成验收。
+墙钟经过 7200.39 秒，最长连续采样 7200.03 秒；采集 7,209 轮；数据库 262,154 行。
+
+- 工作集峰值 331.16 MiB，末 10 分钟平均 313.81 MiB。
+- CPU 平均 0.643%，峰值 8.489%，按整机逻辑核数归一化。
+- 轮询耗时平均 1.857 ms，采样 P95 2.054 ms。
+- 无效采样秒数 0；连续时长复核 通过，超过 5 秒的间隔 0 次。
+
+![最终 WPF 连续 2 小时复测](evidence/ui-endurance-verified-metrics.png)
+
+原始 CSV / JSON：`evidence/ui-endurance-verified-runtime.csv`、`evidence/ui-endurance-verified-summary.json`。

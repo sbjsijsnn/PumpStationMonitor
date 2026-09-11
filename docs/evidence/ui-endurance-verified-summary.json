@@ -1,0 +1,13 @@
+{
+  "completed": true,
+  "continuousSeconds": 7200.0332242,
+  "interruptions": 0,
+  "maximumGapSeconds": 1.1392170999997688,
+  "requestedSeconds": 7200,
+  "elapsedSeconds": 7200.3896221,
+  "polls": 7209,
+  "historyRows": 262154,
+  "peakWorkingSetMb": 331.1640625,
+  "badSampleSeconds": 0,
+  "processors": 12
+}

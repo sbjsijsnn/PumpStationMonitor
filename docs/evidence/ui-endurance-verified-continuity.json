@@ -1,0 +1,7 @@
+{
+  "continuousPassed": true,
+  "longestContinuousSeconds": 7200.033,
+  "samplingRows": 7200,
+  "gapsOver5Seconds": 0,
+  "maximumGapSeconds": 0
+}
