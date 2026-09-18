@@ -1,13 +1,72 @@
 PRAGMA journal_mode=WAL;
-CREATE TABLE IF NOT EXISTS devices (id TEXT PRIMARY KEY, name TEXT NOT NULL, unit_id INTEGER NOT NULL CHECK(unit_id BETWEEN 1 AND 247));
-CREATE TABLE IF NOT EXISTS tags (id TEXT PRIMARY KEY, device_id TEXT NOT NULL REFERENCES devices(id), name TEXT NOT NULL, function INTEGER NOT NULL, address INTEGER NOT NULL, unit TEXT NOT NULL, scale REAL NOT NULL, offset REAL NOT NULL, bit INTEGER, data_type TEXT NOT NULL DEFAULT 'UInt16', byte_order TEXT NOT NULL DEFAULT 'Abcd', enabled INTEGER NOT NULL DEFAULT 1);
-CREATE TABLE IF NOT EXISTS alarm_rules (id TEXT PRIMARY KEY, tag_id TEXT NOT NULL REFERENCES tags(id), kind TEXT NOT NULL, limit_value REAL NOT NULL, deadband REAL NOT NULL, delay_ms INTEGER NOT NULL, severity TEXT NOT NULL, enabled INTEGER NOT NULL DEFAULT 1);
-CREATE TABLE IF NOT EXISTS alarm_events (id TEXT PRIMARY KEY, rule_id TEXT NOT NULL, tag_id TEXT NOT NULL, name TEXT NOT NULL, severity TEXT NOT NULL, raised_at INTEGER NOT NULL, recovered_at INTEGER, acknowledged_at INTEGER, acknowledged_by TEXT, value REAL NOT NULL);
+
+CREATE TABLE IF NOT EXISTS devices (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    unit_id INTEGER NOT NULL CHECK(unit_id BETWEEN 1 AND 247)
+);
+
+CREATE TABLE IF NOT EXISTS tags (
+    id TEXT PRIMARY KEY,
+    device_id TEXT NOT NULL REFERENCES devices(id),
+    name TEXT NOT NULL,
+    function INTEGER NOT NULL,
+    address INTEGER NOT NULL,
+    unit TEXT NOT NULL,
+    scale REAL NOT NULL,
+    offset REAL NOT NULL,
+    bit INTEGER,
+    data_type TEXT NOT NULL DEFAULT 'UInt16',
+    byte_order TEXT NOT NULL DEFAULT 'Abcd',
+    enabled INTEGER NOT NULL DEFAULT 1
+);
+
+CREATE TABLE IF NOT EXISTS alarm_rules (
+    id TEXT PRIMARY KEY,
+    tag_id TEXT NOT NULL REFERENCES tags(id),
+    kind TEXT NOT NULL,
+    limit_value REAL NOT NULL,
+    deadband REAL NOT NULL,
+    delay_ms INTEGER NOT NULL,
+    severity TEXT NOT NULL,
+    enabled INTEGER NOT NULL DEFAULT 1
+);
+
+CREATE TABLE IF NOT EXISTS alarm_events (
+    id TEXT PRIMARY KEY,
+    rule_id TEXT NOT NULL,
+    tag_id TEXT NOT NULL,
+    name TEXT NOT NULL,
+    severity TEXT NOT NULL,
+    raised_at INTEGER NOT NULL,
+    recovered_at INTEGER,
+    acknowledged_at INTEGER,
+    acknowledged_by TEXT,
+    value REAL NOT NULL
+);
 CREATE INDEX IF NOT EXISTS ix_alarm_time ON alarm_events(raised_at DESC);
 CREATE INDEX IF NOT EXISTS ix_alarm_active ON alarm_events(recovered_at,rule_id);
-CREATE TABLE IF NOT EXISTS history (id INTEGER PRIMARY KEY AUTOINCREMENT, tag_id TEXT NOT NULL, device_id TEXT NOT NULL, timestamp INTEGER NOT NULL, value REAL NOT NULL, quality TEXT NOT NULL);
+
+CREATE TABLE IF NOT EXISTS history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tag_id TEXT NOT NULL,
+    device_id TEXT NOT NULL,
+    timestamp INTEGER NOT NULL,
+    value REAL NOT NULL,
+    quality TEXT NOT NULL
+);
 CREATE INDEX IF NOT EXISTS ix_history_tag_time ON history(tag_id,timestamp);
 CREATE INDEX IF NOT EXISTS ix_history_device_time ON history(device_id,timestamp);
 CREATE INDEX IF NOT EXISTS ix_history_time ON history(timestamp);
-CREATE TABLE IF NOT EXISTS users (username TEXT PRIMARY KEY COLLATE NOCASE, password_hash TEXT NOT NULL, role TEXT NOT NULL CHECK(role IN ('Admin','Operator')), enabled INTEGER NOT NULL DEFAULT 1);
-CREATE TABLE IF NOT EXISTS comm_settings (id INTEGER PRIMARY KEY CHECK(id=1), json TEXT NOT NULL);
+
+CREATE TABLE IF NOT EXISTS users (
+    username TEXT PRIMARY KEY COLLATE NOCASE,
+    password_hash TEXT NOT NULL,
+    role TEXT NOT NULL CHECK(role IN ('Admin','Operator')),
+    enabled INTEGER NOT NULL DEFAULT 1
+);
+
+CREATE TABLE IF NOT EXISTS comm_settings (
+    id INTEGER PRIMARY KEY CHECK(id=1),
+    json TEXT NOT NULL
+);

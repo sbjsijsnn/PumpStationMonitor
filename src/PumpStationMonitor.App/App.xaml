@@ -1,57 +1,66 @@
-<?xml version="1.0" ?>
-<Application xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="PumpStationMonitor.App.App" ShutdownMode="OnExplicitShutdown">
+<Application
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="PumpStationMonitor.App.App"
+    ShutdownMode="OnExplicitShutdown">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <SolidColorBrush x:Key="Ink" Color="#203B4D"/>
-            <SolidColorBrush x:Key="Muted" Color="#637987"/>
-            <SolidColorBrush x:Key="Accent" Color="#147D92"/>
+            <SolidColorBrush x:Key="Ink" Color="#203B4D" />
+            <SolidColorBrush x:Key="Muted" Color="#637987" />
+            <SolidColorBrush x:Key="Accent" Color="#147D92" />
             <Style TargetType="Window">
-                <Setter Property="FontFamily" Value="Microsoft YaHei UI"/>
-                <Setter Property="FontSize" Value="13"/>
-                <Setter Property="Foreground" Value="{StaticResource Ink}"/>
-                <Setter Property="Background" Value="#F1F5F7"/>
+                <Setter Property="FontFamily" Value="Microsoft YaHei UI" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="Foreground" Value="{StaticResource Ink}" />
+                <Setter Property="Background" Value="#F1F5F7" />
             </Style>
             <Style TargetType="TextBlock">
-                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
             <Style x:Key="Title" TargetType="TextBlock">
-                <Setter Property="FontSize" Value="26"/>
-                <Setter Property="FontWeight" Value="SemiBold"/>
-                <Setter Property="Margin" Value="0,0,0,6"/>
+                <Setter Property="FontSize" Value="26" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="Margin" Value="0,0,0,6" />
             </Style>
             <Style x:Key="Caption" TargetType="TextBlock">
-                <Setter Property="Foreground" Value="{StaticResource Muted}"/>
-                <Setter Property="Margin" Value="0,0,0,16"/>
+                <Setter Property="Foreground" Value="{StaticResource Muted}" />
+                <Setter Property="Margin" Value="0,0,0,16" />
             </Style>
             <Style TargetType="Button">
-                <Setter Property="Padding" Value="14,8"/>
-                <Setter Property="Margin" Value="0,0,8,0"/>
-                <Setter Property="MinHeight" Value="34"/>
-                <Setter Property="Background" Value="#147D92"/>
-                <Setter Property="Foreground" Value="White"/>
-                <Setter Property="BorderBrush" Value="#147D92"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Padding" Value="14,8" />
+                <Setter Property="Margin" Value="0,0,8,0" />
+                <Setter Property="MinHeight" Value="34" />
+                <Setter Property="Background" Value="#147D92" />
+                <Setter Property="Foreground" Value="White" />
+                <Setter Property="BorderBrush" Value="#147D92" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="Cursor" Value="Hand" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
-                            <Border x:Name="Surface" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4" Padding="{TemplateBinding Padding}">
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Border
+                                x:Name="Surface"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="Surface" Property="Opacity" Value="0.85"/>
+                                    <Setter TargetName="Surface" Property="Opacity" Value="0.85" />
                                 </Trigger>
                                 <Trigger Property="IsKeyboardFocused" Value="True">
-                                    <Setter TargetName="Surface" Property="BorderBrush" Value="#E3AE4F"/>
-                                    <Setter TargetName="Surface" Property="BorderThickness" Value="2"/>
+                                    <Setter TargetName="Surface" Property="BorderBrush" Value="#E3AE4F" />
+                                    <Setter TargetName="Surface" Property="BorderThickness" Value="2" />
                                 </Trigger>
                                 <Trigger Property="IsEnabled" Value="False">
-                                    <Setter TargetName="Surface" Property="Opacity" Value="0.4"/>
+                                    <Setter TargetName="Surface" Property="Opacity" Value="0.4" />
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -59,45 +68,49 @@
                 </Setter>
             </Style>
             <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-                <Setter Property="Padding" Value="8,6"/>
-                <Setter Property="MinHeight" Value="34"/>
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="Padding" Value="8,6" />
+                <Setter Property="MinHeight" Value="34" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
             </Style>
             <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
-                <Setter Property="MinHeight" Value="34"/>
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="MinWidth" Value="100"/>
+                <Setter Property="MinHeight" Value="34" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="MinWidth" Value="100" />
             </Style>
             <Style TargetType="DataGrid" BasedOn="{StaticResource {x:Type DataGrid}}">
-                <Setter Property="AutoGenerateColumns" Value="False"/>
-                <Setter Property="IsReadOnly" Value="True"/>
-                <Setter Property="CanUserAddRows" Value="False"/>
-                <Setter Property="HeadersVisibility" Value="Column"/>
-                <Setter Property="GridLinesVisibility" Value="Horizontal"/>
-                <Setter Property="HorizontalGridLinesBrush" Value="#E6EDF1"/>
-                <Setter Property="RowHeight" Value="38"/>
-                <Setter Property="ColumnHeaderHeight" Value="40"/>
-                <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="Background" Value="White"/>
-                <Setter Property="AlternatingRowBackground" Value="#F8FAFB"/>
-                <Setter Property="SelectionMode" Value="Single"/>
+                <Setter Property="AutoGenerateColumns" Value="False" />
+                <Setter Property="IsReadOnly" Value="True" />
+                <Setter Property="CanUserAddRows" Value="False" />
+                <Setter Property="HeadersVisibility" Value="Column" />
+                <Setter Property="GridLinesVisibility" Value="Horizontal" />
+                <Setter Property="HorizontalGridLinesBrush" Value="#E6EDF1" />
+                <Setter Property="RowHeight" Value="38" />
+                <Setter Property="ColumnHeaderHeight" Value="40" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Background" Value="White" />
+                <Setter Property="AlternatingRowBackground" Value="#F8FAFB" />
+                <Setter Property="SelectionMode" Value="Single" />
             </Style>
             <Style x:Key="Panel" TargetType="Border">
-                <Setter Property="Background" Value="White"/>
-                <Setter Property="Padding" Value="22"/>
-                <Setter Property="CornerRadius" Value="8"/>
-                <Setter Property="BorderBrush" Value="#DFE8ED"/>
-                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Background" Value="White" />
+                <Setter Property="Padding" Value="22" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="BorderBrush" Value="#DFE8ED" />
+                <Setter Property="BorderThickness" Value="1" />
             </Style>
             <Style TargetType="ProgressBar">
-                <Setter Property="Background" Value="#E5EEF1"/>
+                <Setter Property="Background" Value="#E5EEF1" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ProgressBar">
                             <Grid>
-                                <Border Background="{TemplateBinding Background}" CornerRadius="3"/>
-                                <Border x:Name="PART_Track"/>
-                                <Border x:Name="PART_Indicator" HorizontalAlignment="Left" Background="{TemplateBinding Foreground}" CornerRadius="3"/>
+                                <Border Background="{TemplateBinding Background}" CornerRadius="3" />
+                                <Border x:Name="PART_Track" />
+                                <Border
+                                    x:Name="PART_Indicator"
+                                    HorizontalAlignment="Left"
+                                    Background="{TemplateBinding Foreground}"
+                                    CornerRadius="3" />
                             </Grid>
                         </ControlTemplate>
                     </Setter.Value>

@@ -1,0 +1,26 @@
+<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+    x:Class="PumpStationMonitor.App.Views.Pages.RealtimePage">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="实时数据" Style="{StaticResource Title}" />
+        <TextBlock Grid.Row="1" Text="零基地址 · 无效或过期数据不显示为正常值" Style="{StaticResource Caption}" />
+        <DataGrid ItemsSource="{Binding LiveRows}" Grid.Row="2">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="设备" Binding="{Binding Device}" Width="120" />
+                <DataGridTextColumn Header="点位名称" Binding="{Binding Name}" Width="*" />
+                <DataGridTextColumn Header="当前值" Binding="{Binding ValueText}" Width="100" />
+                <DataGridTextColumn Header="单位" Binding="{Binding Unit}" Width="90" />
+                <DataGridTextColumn Header="质量" Binding="{Binding Quality}" Width="90" />
+                <DataGridTextColumn Header="更新时间" Binding="{Binding Updated}" Width="110" />
+                <DataGridTextColumn Header="功能 / 地址 / 位" Binding="{Binding Address}" Width="155" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

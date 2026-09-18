@@ -1,0 +1,84 @@
+<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+    x:Class="PumpStationMonitor.App.Views.Pages.OverviewPage">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <TextBlock Text="站点总览" Style="{StaticResource Title}" />
+            <TextBlock Text="掌握设备工况，及时响应异常。" Style="{StaticResource Caption}" />
+            <Border Style="{StaticResource Panel}" Margin="0,0,0,20">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Alarms.AlarmSummary}" FontSize="18" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding Shell.PollLabel}" Foreground="#637987" Margin="0,8,0,0" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Ellipse Fill="{Binding Shell.ConnectionColor}" Width="10" Height="10" Margin="0,0,8,0" />
+                        <TextBlock Text="{Binding Shell.Connection}" FontSize="16" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+            <ItemsControl ItemsSource="{Binding Devices}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="2" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Panel}" Padding="16" Margin="0,0,14,12">
+                            <StackPanel>
+                                <DockPanel>
+                                    <TextBlock Text="{Binding Name}" FontSize="20" FontWeight="SemiBold" />
+                                    <TextBlock
+                                        Text="{Binding Status}"
+                                        Foreground="{Binding Color}"
+                                        HorizontalAlignment="Right" />
+                                </DockPanel>
+                                <TextBlock Text="{Binding Subtitle}" Foreground="#637987" Margin="0,4,0,6" />
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock
+                                        Text="{Binding Primary}"
+                                        FontSize="32"
+                                        FontFamily="Segoe UI"
+                                        FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding PrimaryUnit}" Margin="10,12,0,0" Foreground="#637987" />
+                                </StackPanel>
+                                <ProgressBar
+                                    Value="{Binding Gauge}"
+                                    Maximum="100"
+                                    Height="5"
+                                    Margin="0,8,0,8"
+                                    Foreground="{Binding Color}" />
+                                <TextBlock Text="{Binding Secondary}" Foreground="#637987" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Border Style="{StaticResource Panel}" Margin="0,4,14,0">
+                <StackPanel>
+                    <TextBlock Text="机组控制" FontSize="18" FontWeight="SemiBold" />
+                    <TextBlock Text="操作员仅可查看；控制应答后请核对设备状态。" Foreground="#637987" Margin="0,6,0,16" />
+                    <WrapPanel IsEnabled="{Binding IsAdmin}">
+                        <ComboBox
+                            ToolTip="Coil：写单线圈；Register：写单寄存器"
+                            ItemsSource="{Binding ControlModes}"
+                            SelectedItem="{Binding ControlMode}"
+                            Width="115"
+                            Margin="0,0,14,0" />
+                        <Button Content="启动 1# 泵" Command="{Binding ControlCommand}" CommandParameter="1:start" />
+                        <Button Content="停止 1# 泵" Command="{Binding ControlCommand}" CommandParameter="1:stop" />
+                        <Button Content="启动 2# 泵" Command="{Binding ControlCommand}" CommandParameter="2:start" />
+                        <Button Content="停止 2# 泵" Command="{Binding ControlCommand}" CommandParameter="2:stop" />
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

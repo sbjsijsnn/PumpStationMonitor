@@ -1,0 +1,34 @@
+<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+    x:Class="PumpStationMonitor.App.Views.Pages.TrendPage">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="运行趋势" Style="{StaticResource Title}" />
+        <WrapPanel Grid.Row="1" Margin="0,16,0,22">
+            <TextBlock Text="监测点位" Margin="0,0,10,0" />
+            <ComboBox
+                Width="225"
+                ItemsSource="{Binding Tags}"
+                DisplayMemberPath="Name"
+                SelectedItem="{Binding TrendTag}" />
+            <TextBlock Text="窗口" Margin="22,0,10,0" />
+            <ComboBox Width="100" ItemsSource="{Binding Spans}" SelectedItem="{Binding SpanMinutes}" />
+            <TextBlock Text="分钟" Margin="10,0,0,0" />
+        </WrapPanel>
+        <Border Grid.Row="2" Style="{StaticResource Panel}">
+            <lvc:CartesianChart
+                Series="{Binding TrendSeries}"
+                XAxes="{Binding TimeAxes}"
+                YAxes="{Binding ValueAxes}"
+                AnimationsSpeed="0:0:0" />
+        </Border>
+        <TextBlock Grid.Row="3" Text="缓存最近 60 分钟；无效质量形成曲线断点。重启后可在历史查询页查看已存记录。" Margin="0,16,0,0" Foreground="#637987" />
+    </Grid>
+</UserControl>

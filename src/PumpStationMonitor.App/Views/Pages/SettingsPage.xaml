@@ -1,0 +1,318 @@
+<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+    x:Class="PumpStationMonitor.App.Views.Pages.SettingsPage">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="系统设置" Style="{StaticResource Title}" />
+        <TextBlock Grid.Row="1" Text="仅管理员可修改配置和用户。已有活动报警的点位与规则暂不能修改。" Style="{StaticResource Caption}" />
+        <TabControl x:Name="SettingsTabs" Grid.Row="2" IsEnabled="{Binding IsAdmin}">
+            <TabItem Header="通信与存储">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="20">
+                        <TextBlock Text="保存后自动重新连接；数据库中的设置优先于首次启动配置。" Style="{StaticResource Caption}" />
+                        <WrapPanel>
+                            <StackPanel Width="190" Margin="0,0,16,16">
+                                <TextBlock Text="协议" Margin="0,0,0,6" />
+                                <ComboBox ItemsSource="{Binding Modes}" SelectedValue="{Binding Communication.Mode}" />
+                            </StackPanel>
+                            <StackPanel Width="190" Margin="0,0,16,16">
+                                <TextBlock Text="TCP 主机" Margin="0,0,0,6" />
+                                <TextBox
+                                    Text="{Binding Communication.Host,
+                                        UpdateSourceTrigger=PropertyChanged,
+                                        ValidatesOnExceptions=True}" />
+                            </StackPanel>
+                            <StackPanel Width="190" Margin="0,0,16,16">
+                                <TextBlock Text="TCP 端口" Margin="0,0,0,6" />
+                                <TextBox
+                                    Text="{Binding Communication.Port,
+                                        UpdateSourceTrigger=PropertyChanged,
+                                        ValidatesOnExceptions=True}" />
+                            </StackPanel>
+                            <StackPanel Width="190" Margin="0,0,16,16">
+                                <TextBlock Text="串口名称" Margin="0,0,0,6" />
+                                <TextBox
+                                    Text="{Binding Communication.SerialPort,
+                                        UpdateSourceTrigger=PropertyChanged,
+                                        ValidatesOnExceptions=True}" />
+                            </StackPanel>
+                            <StackPanel Width="190" Margin="0,0,16,16">
+                                <TextBlock Text="波特率" Margin="0,0,0,6" />
+                                <TextBox
+                                    Text="{Binding Communication.BaudRate,
+                                        UpdateSourceTrigger=PropertyChanged,
+                                        ValidatesOnExceptions=True}" />
+                            </StackPanel>
+                            <StackPanel Width="190" Margin="0,0,16,16">
+                                <TextBlock Text="数据位（5–8）" Margin="0,0,0,6" />
+                                <TextBox
+                                    Text="{Binding Communication.DataBits,
+                                        UpdateSourceTrigger=PropertyChanged,
+                                        ValidatesOnExceptions=True}" />
+                            </StackPanel>
+                            <StackPanel Width="190" Margin="0,0,16,16">
+                                <TextBlock Text="校验（None/Odd/Even）" Margin="0,0,0,6" />
+                                <TextBox
+                                    Text="{Binding Communication.Parity,
+                                        UpdateSourceTrigger=PropertyChanged,
+                                        ValidatesOnExceptions=True}" />
+                            </StackPanel>
+                            <StackPanel Width="190" Margin="0,0,16,16">
+                                <TextBlock Text="停止位（One/Two）" Margin="0,0,0,6" />
+                                <TextBox
+                                    Text="{Binding Communication.StopBits,
+                                        UpdateSourceTrigger=PropertyChanged,
+                                        ValidatesOnExceptions=True}" />
+                            </StackPanel>
+                            <StackPanel Width="190" Margin="0,0,16,16">
+                                <TextBlock Text="采集周期 / ms" Margin="0,0,0,6" />
+                                <TextBox
+                                    Text="{Binding Communication.PollIntervalMs,
+                                        UpdateSourceTrigger=PropertyChanged,
+                                        ValidatesOnExceptions=True}" />
+                            </StackPanel>
+                            <StackPanel Width="190" Margin="0,0,16,16">
+                                <TextBlock Text="超时 / ms" Margin="0,0,0,6" />
+                                <TextBox
+                                    Text="{Binding Communication.TimeoutMs,
+                                        UpdateSourceTrigger=PropertyChanged,
+                                        ValidatesOnExceptions=True}" />
+                            </StackPanel>
+                            <StackPanel Width="190" Margin="0,0,16,16">
+                                <TextBlock Text="读取重试次数" Margin="0,0,0,6" />
+                                <TextBox
+                                    Text="{Binding Communication.Retries,
+                                        UpdateSourceTrigger=PropertyChanged,
+                                        ValidatesOnExceptions=True}" />
+                            </StackPanel>
+                            <StackPanel Width="190" Margin="0,0,16,16">
+                                <TextBlock Text="历史保留 / 天" Margin="0,0,0,6" />
+                                <TextBox
+                                    Text="{Binding Communication.RetentionDays,
+                                        UpdateSourceTrigger=PropertyChanged,
+                                        ValidatesOnExceptions=True}" />
+                            </StackPanel>
+                        </WrapPanel>
+                        <Button
+                            Content="保存通信与保留设置"
+                            Command="{Binding SaveCommunicationCommand}"
+                            HorizontalAlignment="Left" />
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="点表管理">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="20">
+                        <DataGrid ItemsSource="{Binding Tags}" Height="195" SelectedItem="{Binding SelectedTag}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="标识" Binding="{Binding Id}" Width="170" />
+                                <DataGridTextColumn Header="名称" Binding="{Binding Name}" Width="*" />
+                                <DataGridTextColumn Header="地址" Binding="{Binding Address}" Width="70" />
+                                <DataGridTextColumn Header="启用" Binding="{Binding Enabled}" Width="70" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <TextBlock Text="选择一行编辑，或新增点位。删除保留已采集历史。" Margin="0,16,0,16" Foreground="#637987" />
+                        <StackPanel>
+                            <WrapPanel>
+                                <StackPanel Width="190" Margin="0,0,16,16">
+                                    <TextBlock Text="标识（不可与其他点位重复）" Margin="0,0,0,6" />
+                                    <TextBox
+                                        IsReadOnly="{Binding IsEditingTag}"
+                                        Text="{Binding TagEditor.Id,
+                                            UpdateSourceTrigger=PropertyChanged,
+                                            ValidatesOnExceptions=True}" />
+                                </StackPanel>
+                                <StackPanel Width="190" Margin="0,0,16,16">
+                                    <TextBlock Text="点位名称" Margin="0,0,0,6" />
+                                    <TextBox
+                                        Text="{Binding TagEditor.Name,
+                                            UpdateSourceTrigger=PropertyChanged,
+                                            ValidatesOnExceptions=True}" />
+                                </StackPanel>
+                                <StackPanel Width="190" Margin="0,0,16,16">
+                                    <TextBlock Text="设备" Margin="0,0,0,6" />
+                                    <ComboBox
+                                        ItemsSource="{Binding StationDevices}"
+                                        SelectedValue="{Binding TagEditor.DeviceId}"
+                                        DisplayMemberPath="Name"
+                                        SelectedValuePath="Id" />
+                                </StackPanel>
+                                <StackPanel Width="190" Margin="0,0,16,16">
+                                    <TextBlock Text="功能码（01/02/03/04）" Margin="0,0,0,6" />
+                                    <TextBox
+                                        Text="{Binding TagEditor.Function,
+                                            UpdateSourceTrigger=PropertyChanged,
+                                            ValidatesOnExceptions=True}" />
+                                </StackPanel>
+                                <StackPanel Width="190" Margin="0,0,16,16">
+                                    <TextBlock Text="地址（零基）" Margin="0,0,0,6" />
+                                    <TextBox
+                                        Text="{Binding TagEditor.Address,
+                                            UpdateSourceTrigger=PropertyChanged,
+                                            ValidatesOnExceptions=True}" />
+                                </StackPanel>
+                                <StackPanel Width="190" Margin="0,0,16,16">
+                                    <TextBlock Text="单位" Margin="0,0,0,6" />
+                                    <TextBox
+                                        Text="{Binding TagEditor.Unit,
+                                            UpdateSourceTrigger=PropertyChanged,
+                                            ValidatesOnExceptions=True}" />
+                                </StackPanel>
+                                <StackPanel Width="190" Margin="0,0,16,16">
+                                    <TextBlock Text="比例" Margin="0,0,0,6" />
+                                    <TextBox
+                                        Text="{Binding TagEditor.Scale,
+                                            UpdateSourceTrigger=PropertyChanged,
+                                            ValidatesOnExceptions=True}" />
+                                </StackPanel>
+                                <StackPanel Width="190" Margin="0,0,16,16">
+                                    <TextBlock Text="偏移" Margin="0,0,0,6" />
+                                    <TextBox
+                                        Text="{Binding TagEditor.Offset,
+                                            UpdateSourceTrigger=PropertyChanged,
+                                            ValidatesOnExceptions=True}" />
+                                </StackPanel>
+                                <StackPanel Width="190" Margin="0,0,16,16">
+                                    <TextBlock Text="位（留空=模拟量）" Margin="0,0,0,6" />
+                                    <TextBox
+                                        Text="{Binding TagEditor.Bit,
+                                            UpdateSourceTrigger=PropertyChanged,
+                                            ValidatesOnExceptions=True}" />
+                                </StackPanel>
+                                <StackPanel Width="190" Margin="0,0,16,16">
+                                    <TextBlock Text="数据类型" Margin="0,0,0,6" />
+                                    <ComboBox
+                                        ItemsSource="{Binding Types}"
+                                        SelectedValue="{Binding TagEditor.DataType}" />
+                                </StackPanel>
+                                <StackPanel Width="190" Margin="0,0,16,16">
+                                    <TextBlock Text="字节序" Margin="0,0,0,6" />
+                                    <ComboBox
+                                        ItemsSource="{Binding Orders}"
+                                        SelectedValue="{Binding TagEditor.ByteOrder}" />
+                                </StackPanel>
+                            </WrapPanel>
+                            <CheckBox Content="启用采集" IsChecked="{Binding TagEditor.Enabled}" Margin="0,0,0,16" />
+                            <WrapPanel>
+                                <Button Content="新增点位" Command="{Binding NewTagCommand}" />
+                                <Button Content="保存点位" Command="{Binding SaveTagCommand}" />
+                                <Button Content="删除选中点位" Command="{Binding DeleteTagCommand}" />
+                            </WrapPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="报警规则">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="20">
+                        <DataGrid ItemsSource="{Binding Rules}" Height="195" SelectedItem="{Binding SelectedRule}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="标识" Binding="{Binding Id}" Width="150" />
+                                <DataGridTextColumn Header="点位" Binding="{Binding TagId}" Width="*" />
+                                <DataGridTextColumn Header="类型" Binding="{Binding Kind}" Width="70" />
+                                <DataGridTextColumn Header="限值" Binding="{Binding LimitValue}" Width="70" />
+                                <DataGridTextColumn Header="死区" Binding="{Binding Deadband}" Width="70" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <WrapPanel Margin="0,20,0,0">
+                            <StackPanel Width="190" Margin="0,0,16,16">
+                                <TextBlock Text="规则标识" Margin="0,0,0,6" />
+                                <TextBox
+                                    IsReadOnly="{Binding IsEditingRule}"
+                                    Text="{Binding RuleEditor.Id,
+                                        UpdateSourceTrigger=PropertyChanged,
+                                        ValidatesOnExceptions=True}" />
+                            </StackPanel>
+                            <StackPanel Width="190" Margin="0,0,16,16">
+                                <TextBlock Text="点位" Margin="0,0,0,6" />
+                                <ComboBox
+                                    ItemsSource="{Binding Tags}"
+                                    SelectedValue="{Binding RuleEditor.TagId}"
+                                    DisplayMemberPath="Name"
+                                    SelectedValuePath="Id" />
+                            </StackPanel>
+                            <StackPanel Width="190" Margin="0,0,16,16">
+                                <TextBlock Text="类型" Margin="0,0,0,6" />
+                                <ComboBox ItemsSource="{Binding Kinds}" SelectedValue="{Binding RuleEditor.Kind}" />
+                            </StackPanel>
+                            <StackPanel Width="190" Margin="0,0,16,16">
+                                <TextBlock Text="限值" Margin="0,0,0,6" />
+                                <TextBox
+                                    Text="{Binding RuleEditor.LimitValue,
+                                        UpdateSourceTrigger=PropertyChanged,
+                                        ValidatesOnExceptions=True}" />
+                            </StackPanel>
+                            <StackPanel Width="190" Margin="0,0,16,16">
+                                <TextBlock Text="死区" Margin="0,0,0,6" />
+                                <TextBox
+                                    Text="{Binding RuleEditor.Deadband,
+                                        UpdateSourceTrigger=PropertyChanged,
+                                        ValidatesOnExceptions=True}" />
+                            </StackPanel>
+                            <StackPanel Width="190" Margin="0,0,16,16">
+                                <TextBlock Text="延时 / ms" Margin="0,0,0,6" />
+                                <TextBox
+                                    Text="{Binding RuleEditor.DelayMs,
+                                        UpdateSourceTrigger=PropertyChanged,
+                                        ValidatesOnExceptions=True}" />
+                            </StackPanel>
+                            <StackPanel Width="190" Margin="0,0,16,16">
+                                <TextBlock Text="级别" Margin="0,0,0,6" />
+                                <ComboBox
+                                    ItemsSource="{Binding Severities}"
+                                    SelectedValue="{Binding RuleEditor.Severity}" />
+                            </StackPanel>
+                        </WrapPanel>
+                        <CheckBox Content="启用规则" IsChecked="{Binding RuleEditor.Enabled}" Margin="0,0,0,16" />
+                        <WrapPanel>
+                            <Button Content="新增规则" Command="{Binding NewRuleCommand}" />
+                            <Button Content="保存规则" Command="{Binding SaveRuleCommand}" />
+                            <Button Content="删除选中规则" Command="{Binding DeleteRuleCommand}" />
+                        </WrapPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="用户管理">
+                <StackPanel Margin="20">
+                    <DataGrid ItemsSource="{Binding Users}" Height="200" SelectedItem="{Binding SelectedUser}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="用户名" Binding="{Binding Username}" Width="*" />
+                            <DataGridTextColumn Header="角色" Binding="{Binding Role}" Width="150" />
+                            <DataGridTextColumn Header="启用" Binding="{Binding Enabled}" Width="100" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <WrapPanel Margin="0,20,0,0">
+                        <StackPanel Width="190" Margin="0,0,16,16">
+                            <TextBlock Text="用户名" Margin="0,0,0,6" />
+                            <TextBox
+                                Text="{Binding EditUsername,
+                                    UpdateSourceTrigger=PropertyChanged,
+                                    ValidatesOnExceptions=True}" />
+                        </StackPanel>
+                        <StackPanel Width="190" Margin="0,0,16,16">
+                            <TextBlock Text="角色" Margin="0,0,0,6" />
+                            <ComboBox ItemsSource="{Binding Roles}" SelectedValue="{Binding EditRole}" />
+                        </StackPanel>
+                        <StackPanel Width="200">
+                            <TextBlock Text="新密码（留空保留原密码）" Margin="0,0,0,6" />
+                            <PasswordBox x:Name="UserPassword" Height="34" Padding="8" />
+                        </StackPanel>
+                    </WrapPanel>
+                    <CheckBox Content="启用账号" IsChecked="{Binding EditEnabled}" Margin="0,0,0,20" />
+                    <WrapPanel>
+                        <Button Content="新增用户" Command="{Binding NewUserCommand}" />
+                        <Button Content="保存用户" Click="SaveUserClick" />
+                        <Button Content="删除选中用户" Command="{Binding DeleteUserCommand}" />
+                    </WrapPanel>
+                    <TextBlock Text="Admin 为管理员，Operator 为操作员；密码至少 8 位。" Foreground="#637987" Margin="0,20,0,0" />
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

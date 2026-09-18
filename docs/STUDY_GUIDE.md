@@ -57,10 +57,49 @@
 8. `Data/schema.sql` → `StationRepository.cs` → `Seed.cs`：七表、参数 SQL、默认点表。
 9. `Data/Services/HistoryWriter.cs` → `PollingService.cs` → `StationRuntime.cs`：批次、取消、分组读取、快照与报警事件。
 10. `Data/Security/PasswordHasher.cs` → `SessionService.cs` → `StationFacade.cs`：登录、角色与业务规则。
-11. `App/App.xaml.cs` → `ViewModels/LoginViewModel.cs` → `MainViewModel.cs` → `Views/MainWindow.xaml`：生命周期、绑定、命令、界面。
+11. 从 `src/PumpStationMonitor.App/App.xaml.cs` 阅读宿主、页面注册和窗口生命周期。
+    登录逻辑位于 `src/PumpStationMonitor.App/ViewModels/LoginViewModel.cs`。
+    主窗口位于 `src/PumpStationMonitor.App/Views/MainWindow.xaml`，只组合导航、状态栏和六个页面。
+    `src/PumpStationMonitor.App/ViewModels/MainViewModel.cs` 只维护导航、连接信息和时钟。
 12. `tests/PumpStationMonitor.Tests/DataTests.cs`：从真实模拟器走到 SQLite，检查权限、重启、清理和退出排空。
 
 路径中 Data/App 指 src/PumpStationMonitor.Data 和 src/PumpStationMonitor.App。
+
+### 六个页面的文件对应
+
+下表路径相对 `src/PumpStationMonitor.App/`；每个页面的 `.xaml.cs` 与 `.xaml` 放在同一目录。
+
+| 页面 | UserControl | ViewModel |
+| --- | --- | --- |
+| 总览 | `Views/Pages/OverviewPage.xaml` | `ViewModels/OverviewPageViewModel.cs` |
+| 实时数据 | `Views/Pages/RealtimePage.xaml` | `ViewModels/RealtimePageViewModel.cs` |
+| 趋势 | `Views/Pages/TrendPage.xaml` | `ViewModels/TrendPageViewModel.cs` |
+| 报警 | `Views/Pages/AlarmsPage.xaml` | `ViewModels/AlarmsPageViewModel.cs` |
+| 历史 | `Views/Pages/HistoryPage.xaml` | `ViewModels/HistoryPageViewModel.cs` |
+| 设置 | `Views/Pages/SettingsPage.xaml` | `ViewModels/SettingsPageViewModel.cs` |
+
+先读 `ViewModels/PageRefreshCoordinator.cs`，理解初始化、配置刷新与 250 ms 定时分发。
+再读 `ViewModels/PageContext.cs` 和 `ViewModels/PageViewModel.cs`，理解共享身份、提示与命令错误处理。
+`ViewModels/QueryTimeRange.cs` 保留报警历史和采样历史共用的查询时间。
+趋势缓存、报警列表、历史回放和设置编辑状态分别归各页面所有，不再集中于主窗口模型。
+
+### 控制配置与关键流程
+
+控制映射定义在 `src/PumpStationMonitor.Core/Services/StationContracts.cs` 的 `PumpControlSettings`。
+初始配置位于 `src/PumpStationMonitor.App/appsettings.json` 的 `Communication.PumpControls`，以泵号为键。
+每项包含设备 ID、线圈地址、寄存器地址和启停值；默认仍为线圈 0/1、寄存器 40/41、启停值 1/0。
+数据库初始化后以 `comm_settings` 中的配置为准；旧配置缺少该字段时使用相同默认映射。
+`src/PumpStationMonitor.Data/Services/StationRuntime.cs` 的 `ControlAsync` 查配置后寻址，不再拼设备 ID 或计算地址。
+
+逐段注释可从以下方法开始阅读：
+
+- `src/PumpStationMonitor.Core/Protocol/ModbusClientBase.cs`：`ExecuteAsync` 的锁、超时与读写重试区别。
+- `src/PumpStationMonitor.Core/Alarms/AlarmEngine.cs`：`Evaluate` 的质量检查、延时、死区与状态变化。
+- `src/PumpStationMonitor.Data/Services/HistoryWriter.cs`：`ExecuteAsync` 的有界批次、等待复用与退出排空。
+- `src/PumpStationMonitor.Data/Services/StationRuntime.cs`：`PollAsync` 的分组、解码、坏质量与快照发布。
+
+本次只做可读性重构，不扩充测试数量。验收使用 `dotnet format`、全解决方案构建和 `dotnet test`；
+测试应保持 57 项通过、0 失败、0 跳过。源代码行宽不超过 120 字符，忽略生成目录中的文件。
 
 数据库自检：为什么 history 不因删除点位而级联删除？WAL 对查询有什么帮助？索引字段顺序为什么是 tag_id,timestamp？保留策略为什么分块删除？
 
