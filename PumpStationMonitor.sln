@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.10.12201.205 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
 EndProject
@@ -22,6 +22,17 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PumpStationMonitor.App", "src\PumpStationMonitor.App\PumpStationMonitor.App.csproj", "{D0A79212-50A2-4574-AE90-B0E498E732C6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PumpStationMonitor.Host", "examples\PumpStationMonitor.Host\PumpStationMonitor.Host.csproj", "{490A0ECF-3A57-4AAC-8610-1146C5EB3E8B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{2D5235BB-C441-499D-B522-47A71826C9C5}"
+	ProjectSection(SolutionItems) = preProject
+		docs\AUDIT.md = docs\AUDIT.md
+		docs\DECISIONS.md = docs\DECISIONS.md
+		docs\DEMO.md = docs\DEMO.md
+		docs\METRICS.md = docs\METRICS.md
+		docs\README.md = docs\README.md
+		docs\STUDY_GUIDE.md = docs\STUDY_GUIDE.md
+		docs\THIRD_PARTY.md = docs\THIRD_PARTY.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -129,5 +140,8 @@ Global
 		{5105C0AE-BAD5-4558-875C-16D6CFD6D022} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{D0A79212-50A2-4574-AE90-B0E498E732C6} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{490A0ECF-3A57-4AAC-8610-1146C5EB3E8B} = {B36A84DF-456D-A817-6EDD-3EC3E7F6E11F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B21E58A4-4C80-40F6-BD95-7633938AB528}
 	EndGlobalSection
 EndGlobal

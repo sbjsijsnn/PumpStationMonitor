@@ -92,7 +92,7 @@ public abstract class ModbusClientBase : IModbusClient
                     Logger.LogError(ex, "Communication failed on attempt {Attempt}", attempt + 1);
                     token.ThrowIfCancellationRequested();
                     // 写请求可能已执行但应答丢失，禁止自动重发控制命令。
-                    if (attempt >= options.Retries || request[0] is 5 or 6 or 16)
+                     if (attempt >= options.Retries || request[0] is 5 or 6 or 16)
                     {
                         if (ex is OperationCanceledException)
                         {

@@ -13,7 +13,7 @@
 - 默认通信：`127.0.0.1:1502`，站号 1。
 - 模拟器命令：`fault 1`、`fault 2`、`level 9.5`、`offline`、`recover`、`quit`。
 
-已生成自带运行时的 Windows x64 版本，位于 `artifacts/release/App` 和 `artifacts/release/Simulator`。移动程序时必须复制整个目录，不能只复制 exe。源码首次使用一键脚本时若没有发布文件，会自动构建，需要 .NET 10 SDK。
+自带运行时的 Windows x64 版本输出到 `artifacts/release/App` 和 `artifacts/release/Simulator`。源码仓库不包含这些构建产物；首次使用一键脚本时若没有发布文件，会自动构建，需要 .NET 10 SDK。移动已发布程序时必须复制整个目录，不能只复制 exe。
 
 ## 功能
 
@@ -47,5 +47,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Verify.ps1 -Seconds 
 App 目标为 `net10.0-windows10.0.19041.0`，其余项目 `net10.0`。最低 Windows 10 2004，当前在本机 .NET SDK 10.0.400 验收。解决方案是传统 `.sln`；VS 2022 是否支持该 SDK 未验收，命令行构建已通过。
 
 [完整运行手册](docs/README.md) · [学习指南](docs/STUDY_GUIDE.md) · [演示脚本](docs/DEMO.md) · [技术决策](docs/DECISIONS.md) · [实测指标](docs/METRICS.md) · [异常审计](docs/AUDIT.md)
+
+[项目全解与面试问答](docs/PumpStationMonitor项目全解与面试问答.md)：完整项目讲解、200 道面试问答，以及 13 道基础面试题的概念解释与自然表达。
 
 RTU 报文与客户端已实现，实际串口/虚拟串口链路未验证。历史查询和 CSV 每次最多 10,000 条，更多数据请缩小时间范围。

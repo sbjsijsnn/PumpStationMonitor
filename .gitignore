@@ -9,3 +9,7 @@ TestResults/
 
 artifacts/
 **/publish/
+
+# Local archive backups
+/PumpStationMonitor.rar
+/src.rar
